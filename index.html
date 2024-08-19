@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stopwatch Web Application</title>
+    
+    <style>
+
+        body{
+            background-image: url(https://i.pinimg.com/originals/f3/22/90/f32290baf27ca353075822a3901ad498.jpg);
+            background-repeat: no-repeat;
+            background-size: cover; 
+            background-position: center;
+        }
+        h1{
+            text-align: center;
+            
+        }
+    .stopwatch-container {
+    width: 300px;
+    margin: 40px auto;
+    text-align: center;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-image: url(https://i.pinimg.com/originals/f3/22/90/f32290baf27ca353075822a3901ad498.jpg);
+            background-repeat: no-repeat;
+            background-size: cover; 
+            background-position: center;
+
+}
+
+.stopwatch-display {
+    font-size: 48px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.stopwatch-controls {
+    margin-top: 20px;
+}
+
+.stopwatch-controls button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: #fff;
+    cursor: pointer;
+}
+
+.stopwatch-controls button:hover {
+    background-color: #3e8e41;
+}
+ #lap-times-list{
+    font-weight: bold;
+    font-size: 20px;
+    color: white;
+
+ }
+    </style>
+</head>
+<body>
+    <h1>Stopwatch</h1>
+    <div class="stopwatch-container">
+      <div class="stopwatch-display" id="stopwatch-display">00:00:00</div>
+        <div class="stopwatch-controls">
+            <button id="start-button">Start</button>
+            <button id="pause-button">Pause</button>
+            <button id="reset-button">Reset</button>
+            <button id="lap-button">Lap</button>
+        </div>
+        <ul id="lap-times-list"></ul>
+    </div>
+        <!-- stopwatch display and controls will go here -->
+    </div>
+
+    <script>
+    let stopwatchInterval;
+let lapTimes = [];
+let startTime;
+
+document.addEventListener("DOMContentLoaded", function() {
+    const startButton = document.getElementById("start-button");
+    const pauseButton = document.getElementById("pause-button");
+    const resetButton = document.getElementById("reset-button");
+    const lapButton = document.getElementById("lap-button");
+    const stopwatchDisplay = document.getElementById("stopwatch-display");
+
+    startButton.addEventListener("click", startStopwatch);
+    pauseButton.addEventListener("click", pauseStopwatch);
+    resetButton.addEventListener("click", resetStopwatch);
+    lapButton.addEventListener("click", lapTime);
+
+    function startStopwatch() {
+        startTime = new Date().getTime();
+        stopwatchInterval = setInterval(updateStopwatch, 1000);
+    }
+
+    function pauseStopwatch() {
+        clearInterval(stopwatchInterval);
+    }
+
+    function resetStopwatch() {
+        stopwatchDisplay.textContent = "00:00:00";
+        lapTimes = [];
+    }
+
+    function lapTime() {
+        const currentTime = new Date().getTime();
+        const lapTime = currentTime - startTime;
+        lapTimes.push(lapTime);
+        displayLapTimes();
+    }
+
+    function updateStopwatch() {
+        const currentTime = new Date().getTime();
+        const elapsedTime = currentTime - startTime;
+        const hours = Math.floor(elapsedTime / 3600000);
+        const minutes = Math.floor((elapsedTime % 3600000) / 60000);
+        const seconds = Math.floor((elapsedTime % 60000) / 1000);
+        stopwatchDisplay.textContent = `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+    }
+
+    function displayLapTimes() {
+        const lapTimesList = document.getElementById("lap-times-list");
+        lapTimesList.innerHTML = "";
+        lapTimes.forEach((lapTime, index) => {
+            const lapTimeElement = document.createElement("li");
+            const hours = Math.floor(lapTime / 3600000);
+            const minutes = Math.floor((lapTime % 3600000) / 60000);
+            const seconds = Math.floor((lapTime % 60000) / 1000);
+            lapTimeElement.textContent = `Lap ${index + 1}: ${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+            lapTimesList.appendChild(lapTimeElement);
+        });
+    }
+    function resetStopwatch() {
+    stopwatchDisplay.textContent = "00:00:00";
+    lapTimes = [];
+    displayLapTimes(); 
+}
+});
+
+</script> 
+</body>
+</html>
